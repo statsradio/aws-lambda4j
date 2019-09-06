@@ -1,0 +1,10 @@
+build:
+  maxIssues: 0
+
+formatting:
+  NoWildcardImports:
+    active: false
+
+style:
+  WildcardImport:
+    active: false
