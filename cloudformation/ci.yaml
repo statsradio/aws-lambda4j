@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CI for AWS-Lambda4J
+
+Resources:
+  CiPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: "TestsSSM"
+            Effect: "Allow"
+            Action:
+              - "ssm:*"
+            Resource:
+              - "arn:aws:ssm:*:*:parameter/lambda4j-test-*"
