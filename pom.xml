@@ -6,7 +6,7 @@
 
     <groupId>com.statsradio.lambdas</groupId>
     <artifactId>aws-lambda4j</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.2</version>
 
     <packaging>jar</packaging>
 
@@ -267,5 +267,11 @@
         </plugins>
     </build>
 
-
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub StatsRadio Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/statsradio/aws-lambda4j</url>
+        </repository>
+    </distributionManagement>
 </project>
