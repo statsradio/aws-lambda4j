@@ -2,3 +2,5 @@
 
 .stamps/
 target/
+
+mvn-repo/
