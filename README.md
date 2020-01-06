@@ -15,15 +15,13 @@ The library is currently hosted on GitHub packages
 ```
 
 ### Maven Repository
-Add this line and GitHub authentication to your `.m2/settings.xml` file
 ```
 <repository>
-  <id>github</id>
-  <name>GitHub StatsRadio Apache Maven Packages</name>
-  <url>https://maven.pkg.github.com/statsradio/aws-lambda4j</url>
+  <id>aws-lambda4j</id>
+  <name>AWS Lambda4J repository</name>
+  <url>https://raw.github.com/statsradio/aws-lambda4j/mvn-repo</url>
 </repository>
 ```
-More information: https://help.github.com/en/github/managing-packages-with-github-packages/configuring-apache-maven-for-use-with-github-packages
 
 ## Handler
 The provided abstract handler class implements logging of request/response and error handling for your lambda handlers.
