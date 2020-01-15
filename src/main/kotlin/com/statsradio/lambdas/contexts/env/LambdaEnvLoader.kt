@@ -34,7 +34,9 @@ interface LambdaEnvLoader {
         return try {
             load(env)
         } catch (error: CouldNotLoadEnvException) {
-            logger.info("Could not load $env from env loader(s), fallback to null", error)
+            logger.info("Could not load $env from env loader(s), fallback to null")
+            logger.debug(error)
+
             null
         }
     }
