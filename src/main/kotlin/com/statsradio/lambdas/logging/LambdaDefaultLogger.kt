@@ -14,12 +14,12 @@ class LambdaDefaultLogger(private val gson: Gson = Gson()) : LambdaLogger {
     companion object : Logging
 
     override fun recordRequest(request: Any, awsRuntimeContext: Context) {
-        logger.info("Request : $request")
+        logger.debug("Request : $request")
         logRuntimeContext(awsRuntimeContext)
     }
 
     override fun recordResponse(response: Any, awsRuntimeContext: Context) {
-        logger.info("Response : $response")
+        logger.debug("Response : $response")
     }
 
     override fun recordError(error: Exception, awsRuntimeContext: Context) {
