@@ -6,7 +6,6 @@ import com.statsradio.lambdas.logging.LambdaDefaultLogger
 import com.statsradio.lambdas.logging.LambdaLogger
 import com.statsradio.lambdas.logging.LambdaMultipleLogger
 import com.statsradio.lambdas.logging.LambdaSentryLogger
-import io.sentry.Sentry
 
 object DefaultConfiguration {
     const val ENV = "test"
@@ -20,7 +19,10 @@ object DefaultConfiguration {
  * @param envLoader Overrides the default EnvLoader
  */
 open class LambdaContext(
-    private val envLoader: LambdaEnvLoader = LambdaEnvLoaderFactory().create()
+    private val envLoader: LambdaEnvLoader = LambdaEnvLoaderFactory().create(),
+    private val configureSentryLogger: (dsn: String) -> LambdaSentryLogger = {
+        LambdaSentryLogger.configureDefault(it, envLoader.tryLoad("ENV") ?: DefaultConfiguration.ENV)
+    }
 ) {
     /**
      * Lambda lifecycle logger, configured with Log4J2 and Sentry if `SENTRY_DSN` is present
@@ -29,18 +31,11 @@ open class LambdaContext(
         val tracers = mutableListOf<LambdaLogger>()
 
         envLoader.tryLoad("SENTRY_DSN")?.apply {
-            val sentryTracer = createSentryLogger(this)
+            val sentryTracer = configureSentryLogger(this)
             tracers.add(sentryTracer)
         }
 
         tracers.add(LambdaDefaultLogger())
         LambdaMultipleLogger(tracers)
-    }
-
-    private fun createSentryLogger(dsn: String): LambdaSentryLogger {
-        val sentry = Sentry.init(dsn)
-        sentry.environment = envLoader.tryLoad("ENV") ?: DefaultConfiguration.ENV
-
-        return LambdaSentryLogger(sentry)
     }
 }

@@ -1,6 +1,7 @@
 package com.statsradio.lambdas.logging
 
 import com.amazonaws.services.lambda.runtime.Context
+import io.sentry.Sentry
 import io.sentry.SentryClient
 import io.sentry.event.Breadcrumb
 import io.sentry.event.BreadcrumbBuilder
@@ -14,6 +15,16 @@ import io.sentry.event.BreadcrumbBuilder
 class LambdaSentryLogger(
     sentryClient: SentryClient
 ) : LambdaLogger {
+
+    companion object {
+
+        fun configureDefault(dsn: String, env: String): LambdaSentryLogger {
+            val sentry = Sentry.init(dsn)
+            sentry.environment = env
+
+            return LambdaSentryLogger(sentry)
+        }
+    }
 
     private val sentryContext = sentryClient.context
 
