@@ -19,10 +19,7 @@ object DefaultConfiguration {
  * @param envLoader Overrides the default EnvLoader
  */
 open class LambdaContext(
-    private val envLoader: LambdaEnvLoader = LambdaEnvLoaderFactory().create(),
-    private val configureSentryLogger: (dsn: String) -> LambdaSentryLogger = {
-        LambdaSentryLogger.configureDefault(it, envLoader.tryLoad("ENV") ?: DefaultConfiguration.ENV)
-    }
+    private val envLoader: LambdaEnvLoader = LambdaEnvLoaderFactory().create()
 ) {
     /**
      * Lambda lifecycle logger, configured with Log4J2 and Sentry if `SENTRY_DSN` is present
@@ -37,5 +34,13 @@ open class LambdaContext(
 
         tracers.add(LambdaDefaultLogger())
         LambdaMultipleLogger(tracers)
+    }
+
+    /**
+     * Overridable configuration function for Sentry logger
+     */
+    protected open fun configureSentryLogger(dsn: String): LambdaSentryLogger {
+        val env = envLoader.tryLoad("ENV") ?: DefaultConfiguration.ENV
+        return LambdaSentryLogger.configureDefault(dsn, env)
     }
 }
