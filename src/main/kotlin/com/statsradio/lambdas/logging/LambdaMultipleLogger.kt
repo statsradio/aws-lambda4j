@@ -11,18 +11,22 @@ class LambdaMultipleLogger(
 ) : LambdaLogger {
 
     override fun recordResponse(response: Any, awsRuntimeContext: Context) {
-        loggers.forEach { tracer -> tracer.recordResponse(response, awsRuntimeContext) }
+        loggers.forEach { it.recordResponse(response, awsRuntimeContext) }
     }
 
-    override fun recordError(error: Exception, awsRuntimeContext: Context) {
-        loggers.forEach { tracer -> tracer.recordError(error, awsRuntimeContext) }
+    override fun recordHandlerError(error: Exception, awsRuntimeContext: Context) {
+        loggers.forEach { it.recordHandlerError(error, awsRuntimeContext) }
+    }
+
+    override fun recordError(type: String, error: Exception, message: String?, metadata: Map<String, String>) {
+        loggers.forEach { it.recordError(type, error, message, metadata) }
     }
 
     override fun recordRequest(request: Any, awsRuntimeContext: Context) {
-        loggers.forEach { tracer -> tracer.recordRequest(request, awsRuntimeContext) }
+        loggers.forEach { it.recordRequest(request, awsRuntimeContext) }
     }
 
     override fun recordEvent(type: String, message: String, metadata: Map<String, String>, level: Level) {
-        loggers.forEach { tracer -> tracer.recordEvent(type, message, metadata, level) }
+        loggers.forEach { it.recordEvent(type, message, metadata, level) }
     }
 }

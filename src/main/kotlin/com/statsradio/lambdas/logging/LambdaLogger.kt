@@ -21,5 +21,5 @@ interface LambdaLogger : EventLogger {
     /**
      * @param error caught error during lambda execution
      */
-    fun recordError(error: Exception, awsRuntimeContext: Context)
+    fun recordHandlerError(error: Exception, awsRuntimeContext: Context)
 }

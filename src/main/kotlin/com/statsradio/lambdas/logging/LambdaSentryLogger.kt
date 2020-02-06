@@ -29,7 +29,7 @@ class LambdaSentryLogger(
 
     private val sentryContext = sentryClient.context
 
-    override fun recordError(error: Exception, awsRuntimeContext: Context) {
+    override fun recordHandlerError(error: Exception, awsRuntimeContext: Context) {
         val breadcrumb = BreadcrumbBuilder()
             .setCategory("error")
             .setLevel(Breadcrumb.Level.ERROR)
@@ -74,6 +74,22 @@ class LambdaSentryLogger(
             .setMessage(message)
             .setLevel(level.asBreadcrumbLevel())
             .setData(metadata)
+            .build()
+
+        sentryContext.recordBreadcrumb(breadcrumb)
+    }
+
+    override fun recordError(type: String, error: Exception, message: String?, metadata: Map<String, String>) {
+        val breadcrumb = BreadcrumbBuilder()
+            .setCategory(type)
+            .setMessage(message)
+            .setLevel(Breadcrumb.Level.ERROR)
+            .setData(
+                metadata + mapOf(
+                    "exception" to error::class.qualifiedName,
+                    "exception_message" to error.message
+                )
+            )
             .build()
 
         sentryContext.recordBreadcrumb(breadcrumb)

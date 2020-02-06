@@ -10,6 +10,8 @@ class LambdaMultipleLoggerTest {
     companion object {
         const val REQUEST = "request"
         const val RESPONSE = "response"
+        const val EVENT_TYPE = "event"
+        const val EVENT = "this is an event message"
 
         val ERROR = Exception("error")
     }
@@ -41,12 +43,32 @@ class LambdaMultipleLoggerTest {
     }
 
     @Test
-    fun `should record error in all loggers`() {
-        multipleLogger.recordError(ERROR, context)
+    fun `should record handler error in all loggers`() {
+        multipleLogger.recordHandlerError(ERROR, context)
 
         verifyOrder {
-            logger1.recordError(ERROR, context)
-            logger2.recordError(ERROR, context)
+            logger1.recordHandlerError(ERROR, context)
+            logger2.recordHandlerError(ERROR, context)
+        }
+    }
+
+    @Test
+    fun `should record events in all loggers`() {
+        multipleLogger.recordEvent(EVENT_TYPE, EVENT)
+
+        verifyOrder {
+            logger1.recordEvent(EVENT_TYPE, EVENT)
+            logger2.recordEvent(EVENT_TYPE, EVENT)
+        }
+    }
+
+    @Test
+    fun `should record error in all loggers`() {
+        multipleLogger.recordError(EVENT_TYPE, ERROR)
+
+        verifyOrder {
+            logger1.recordError(EVENT_TYPE, ERROR)
+            logger2.recordError(EVENT_TYPE, ERROR)
         }
     }
 }

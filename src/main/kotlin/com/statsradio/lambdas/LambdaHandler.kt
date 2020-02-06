@@ -18,7 +18,7 @@ abstract class LambdaHandler<I, O>(
 
             return response
         } catch (expected: Exception) {
-            logger.recordError(expected, awsRuntimeContext)
+            logger.recordHandlerError(expected, awsRuntimeContext)
             throw expected
         }
     }
