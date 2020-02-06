@@ -1,6 +1,7 @@
 package com.statsradio.lambdas.logging
 
 import com.amazonaws.services.lambda.runtime.Context
+import org.apache.logging.log4j.Level
 
 /**
  * Combine multiple LambdaLogger together
@@ -21,7 +22,7 @@ class LambdaMultipleLogger(
         loggers.forEach { tracer -> tracer.recordRequest(request, awsRuntimeContext) }
     }
 
-    override fun recordEvent(type: String, message: String, metadata: Map<String, String>) {
-        loggers.forEach { tracer -> tracer.recordEvent(type, message, metadata) }
+    override fun recordEvent(type: String, message: String, metadata: Map<String, String>, level: Level) {
+        loggers.forEach { tracer -> tracer.recordEvent(type, message, metadata, level) }
     }
 }
