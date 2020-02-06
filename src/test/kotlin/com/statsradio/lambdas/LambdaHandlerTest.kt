@@ -70,7 +70,7 @@ class LambdaHandlerTest {
         assertThrows<Exception> { lambdaHandler.handleRequest(INPUT, lambdaRuntimeContext) }
         verifyOrder {
             lambdaLogger.recordRequest(INPUT, lambdaRuntimeContext)
-            lambdaLogger.recordError(error, lambdaRuntimeContext)
+            lambdaLogger.recordHandlerError(error, lambdaRuntimeContext)
         }
     }
 }

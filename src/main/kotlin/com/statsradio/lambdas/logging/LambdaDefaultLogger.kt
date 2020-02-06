@@ -26,8 +26,12 @@ class LambdaDefaultLogger(
         logger.log(level, "Response : $response")
     }
 
-    override fun recordError(error: Exception, awsRuntimeContext: Context) {
+    override fun recordHandlerError(error: Exception, awsRuntimeContext: Context) {
         logger.error("Error", error)
+    }
+
+    override fun recordError(type: String, error: Exception, message: String?, metadata: Map<String, String>) {
+        logger.error("$type => $message: \n$metadata", error)
     }
 
     override fun recordEvent(type: String, message: String, metadata: Map<String, String>, level: Level) {
