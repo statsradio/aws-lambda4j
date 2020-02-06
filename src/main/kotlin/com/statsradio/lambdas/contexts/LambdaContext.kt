@@ -24,7 +24,12 @@ open class LambdaContext(
     /**
      * Lambda lifecycle logger, configured with Log4J2 and Sentry if `SENTRY_DSN` is present
      */
-    val logger: LambdaLogger by lazy {
+    val logger by lazy { configureLogger() }
+
+    /**
+     * Overridable lambda logger configuration
+     */
+    protected open fun configureLogger(): LambdaLogger {
         val tracers = mutableListOf<LambdaLogger>()
 
         envLoader.tryLoad("SENTRY_DSN")?.apply {
@@ -33,13 +38,10 @@ open class LambdaContext(
         }
 
         tracers.add(LambdaDefaultLogger())
-        LambdaMultipleLogger(tracers)
+        return LambdaMultipleLogger(tracers)
     }
 
-    /**
-     * Overridable configuration function for Sentry logger
-     */
-    protected open fun configureSentryLogger(dsn: String): LambdaSentryLogger {
+    private fun configureSentryLogger(dsn: String): LambdaSentryLogger {
         val env = envLoader.tryLoad("ENV") ?: DefaultConfiguration.ENV
         return LambdaSentryLogger.configureDefault(dsn, env)
     }
