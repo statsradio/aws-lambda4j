@@ -5,6 +5,7 @@ import io.sentry.Sentry
 import io.sentry.SentryClient
 import io.sentry.event.Breadcrumb
 import io.sentry.event.BreadcrumbBuilder
+import org.apache.logging.log4j.Level
 
 /**
  * Sentry logger for the lambda lifecycle
@@ -67,15 +68,26 @@ class LambdaSentryLogger(
         sentryContext.addExtra("request", request)
     }
 
-    override fun recordEvent(type: String, message: String, metadata: Map<String, String>) {
+    override fun recordEvent(type: String, message: String, metadata: Map<String, String>, level: Level) {
         val breadcrumb = BreadcrumbBuilder()
             .setCategory(type)
             .setMessage(message)
-            .setLevel(Breadcrumb.Level.INFO)
+            .setLevel(level.asBreadcrumbLevel())
             .setData(metadata)
             .build()
 
         sentryContext.recordBreadcrumb(breadcrumb)
+    }
+
+    private fun Level.asBreadcrumbLevel(): Breadcrumb.Level {
+        return when (this) {
+            Level.TRACE -> Breadcrumb.Level.DEBUG
+            Level.DEBUG -> Breadcrumb.Level.DEBUG
+            Level.WARN -> Breadcrumb.Level.WARNING
+            Level.ERROR -> Breadcrumb.Level.ERROR
+            Level.FATAL -> Breadcrumb.Level.CRITICAL
+            else -> Breadcrumb.Level.INFO
+        }
     }
 
     private fun buildBreadcrumb(builder: BreadcrumbBuilder, awsRuntimeContext: Context): Breadcrumb {

@@ -30,7 +30,7 @@ class LambdaDefaultLogger(
         logger.error("Error", error)
     }
 
-    override fun recordEvent(type: String, message: String, metadata: Map<String, String>) {
+    override fun recordEvent(type: String, message: String, metadata: Map<String, String>, level: Level) {
         logger.log(level, "$type => $message: \n$metadata")
     }
 
