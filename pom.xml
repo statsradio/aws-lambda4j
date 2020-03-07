@@ -6,7 +6,7 @@
 
     <groupId>com.statsradio.lambdas</groupId>
     <artifactId>aws-lambda4j</artifactId>
-    <version>0.0.10</version>
+    <version>0.0.11-R2</version>
 
     <packaging>jar</packaging>
 
@@ -26,6 +26,7 @@
         <sentry.version>1.7.26</sentry.version>
 
         <aws.sdk.version>1.11.614</aws.sdk.version>
+        <aws.xray.version>2.4.0</aws.xray.version>
     </properties>
 
     <dependencyManagement>
@@ -34,6 +35,13 @@
                 <groupId>com.amazonaws</groupId>
                 <artifactId>aws-java-sdk-bom</artifactId>
                 <version>${aws.sdk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-xray-recorder-sdk-bom</artifactId>
+                <version>${aws.xray.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -64,6 +72,15 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-ssm</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-xray-recorder-sdk-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-xray-recorder-sdk-aws-sdk</artifactId>
         </dependency>
 
         <!-- Log4j2/Sentry -->
