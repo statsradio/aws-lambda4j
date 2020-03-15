@@ -1,8 +1,7 @@
 package com.statsradio.tracing.xray
 
-import com.statsradio.tracing.Trace
 import com.amazonaws.xray.entities.Entity
-import com.statsradio.tracing.xray.XRay
+import com.statsradio.tracing.Trace
 import org.apache.logging.log4j.kotlin.Logging
 
 data class XRayTrace(

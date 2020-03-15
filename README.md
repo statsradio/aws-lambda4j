@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/statsradio/aws-lambda4j.svg?branch=master)](https://travis-ci.org/statsradio/aws-lambda4j)
+![CI](https://github.com/statsradio/aws-lambda4j/workflows/CI/badge.svg)
 # AWS Lambda4J
 Small utility classes used to facilitate Lambda development with Kotlin
 

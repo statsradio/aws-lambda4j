@@ -1,6 +1,9 @@
 SOURCE_FILES := $(shell find src -type f)
 
-.PHONY: lint test package publish
+.PHONY: build lint test package publish
+
+build:
+	mvn compile -DskipTests
 
 lint:
 	mvn antrun:run@detekt
