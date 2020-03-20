@@ -78,6 +78,15 @@ internal class XRayTracerTest {
     }
 
     @Test
+    fun `given error on execution, should add exception`() {
+        val error = IllegalArgumentException("Wassup")
+        val tracer = XRayTracer(recorder)
+
+        assertThrows<IllegalArgumentException> { tracer.trace(TRACE_NAME) { throw error } }
+        verify { subsegment.addException(error) }
+    }
+
+    @Test
     fun `given error on execution, should close subsegment`() {
         val tracer = XRayTracer(recorder)
 

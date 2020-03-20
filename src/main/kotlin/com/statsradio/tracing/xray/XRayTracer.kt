@@ -9,11 +9,9 @@ class XRayTracer(
     private val recorder: AWSXRayRecorder
 ) : Tracer {
 
-    override fun <T> trace(name: String, toTrace: (trace: Trace) -> T): T {
+    override fun openTrace(name: String): Trace {
         val subsegment = createSubsegment(name)
-        XRayTrace(subsegment).use { trace ->
-            return toTrace(trace)
-        }
+        return XRayTrace(subsegment)
     }
 
     private fun createSubsegment(name: String): Subsegment? {
