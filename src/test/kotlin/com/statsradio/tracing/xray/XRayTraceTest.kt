@@ -22,6 +22,7 @@ internal class XRayTraceTest {
         private const val TAG_VALUE = "NotBob"
         private const val METADATA_KEY = "BobMeta"
         private const val METADATA_VALUE = "BobNotMeta"
+        private val ERROR = Exception("Error")
 
         @JvmStatic
         fun xrayExceptions() = XRay.exceptions.map { Arguments.of(it.createInstance()) }
@@ -63,6 +64,20 @@ internal class XRayTraceTest {
     }
 
     @Test
+    fun `given entity, when signal error, should add exception`() {
+        val trace = XRayTrace(entity)
+        trace.signalError(ERROR)
+        verify { entity.addException(ERROR) }
+    }
+
+    @Test
+    fun `given no entity, when signal error, should not add exception`() {
+        val trace = XRayTrace(null)
+        trace.signalError(ERROR)
+        verify(exactly = 0) { entity.addException(ERROR) }
+    }
+
+    @Test
     fun `given entity, when close, should close it`() {
         val trace = XRayTrace(entity)
         trace.close()
@@ -79,6 +94,7 @@ internal class XRayTraceTest {
     @ParameterizedTest
     @MethodSource("xrayExceptions")
     fun <E : Exception> `given xray exception, should not throw`(exception: E) {
+        every { entity.addException(ERROR) } throws exception
         every { entity.putAnnotation(TAG_NAME, TAG_VALUE) } throws exception
         every { entity.putMetadata(METADATA_KEY, METADATA_VALUE) } throws exception
         every { entity.close() } throws exception
@@ -86,6 +102,7 @@ internal class XRayTraceTest {
         val trace = XRayTrace(entity)
 
         assertAll {
+            assertDoesNotThrow { trace.signalError(ERROR) }
             assertDoesNotThrow { trace.setTag(TAG_NAME, TAG_VALUE) }
             assertDoesNotThrow { trace.setMetadata(METADATA_KEY, METADATA_VALUE) }
             assertDoesNotThrow { trace.close() }
@@ -95,6 +112,7 @@ internal class XRayTraceTest {
     @Test
     fun `given non xray exception, should throw it`() {
         val exception = InterruptedException()
+        every { entity.addException(ERROR) } throws exception
         every { entity.putAnnotation(TAG_NAME, TAG_VALUE) } throws exception
         every { entity.putMetadata(METADATA_KEY, METADATA_VALUE) } throws exception
         every { entity.close() } throws exception
@@ -102,6 +120,7 @@ internal class XRayTraceTest {
         val trace = XRayTrace(entity)
 
         assertAll {
+            assertThrows<InterruptedException> { trace.signalError(ERROR) }
             assertThrows<InterruptedException> { trace.setTag(TAG_NAME, TAG_VALUE) }
             assertThrows<InterruptedException> { trace.setMetadata(METADATA_KEY, METADATA_VALUE) }
             assertThrows<InterruptedException> { trace.close() }

@@ -10,6 +10,20 @@ data class XRayTrace(
 
     companion object : Logging
 
+    /**
+     * Puts exception to XRay Trace
+     */
+    override fun signalError(error: Exception) {
+        try {
+            xrayEntity?.addException(error)
+        } catch (expected: Exception) {
+            XRay.suppressXRayException(expected)
+        }
+    }
+
+    /**
+     * Puts annotation to XRay trace
+     */
     override fun setTag(name: String, value: String) {
         try {
             xrayEntity?.putAnnotation(name, value)
@@ -18,7 +32,10 @@ data class XRayTrace(
         }
     }
 
-    override fun setMetadata(key: String, value: Any) {
+    /**
+     * Puts metadata to XRay trace
+     */
+    override fun setMetadata(key: String, value: String) {
         try {
             xrayEntity?.putMetadata(key, value)
         } catch (expected: Exception) {
@@ -26,6 +43,9 @@ data class XRayTrace(
         }
     }
 
+    /**
+     * Closes the entity
+     */
     override fun close() {
         try {
             xrayEntity?.close()

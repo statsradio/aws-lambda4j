@@ -10,13 +10,15 @@ class Log4JTracer : Tracer {
 
     companion object : Logging
 
-    override fun <T> trace(name: String, toTrace: (trace: Trace) -> T): T {
+    override fun openTrace(name: String): Trace {
         val traceId = UUID.randomUUID().toString()
         val context = CloseableThreadContext.put("traceId", traceId)
 
-        Log4JTrace(context).use { trace ->
-            logger.trace(name)
-            return toTrace(trace)
-        }
+        return Log4JTrace(
+            context = context,
+            logger = logger,
+            id = traceId,
+            name = name
+        )
     }
 }
