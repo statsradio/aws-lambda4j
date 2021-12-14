@@ -22,7 +22,7 @@
         <kotlin.code.style>official</kotlin.code.style>
         <junit.version>5.5.1</junit.version>
 
-        <log4j.version>2.12.1</log4j.version>
+        <log4j.version>2.16.0</log4j.version>
         <sentry.version>1.7.26</sentry.version>
 
         <aws.sdk.version>1.11.614</aws.sdk.version>
